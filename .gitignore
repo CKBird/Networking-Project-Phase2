@@ -48,3 +48,12 @@ Temporary Items
 *.suo
 *.vcxproj
 *.filters
+*.exe
+*.ilk
+*.pdb
+*.obj
+*.tlog
+*.log
+*.pch
+*.idb
+*.user
