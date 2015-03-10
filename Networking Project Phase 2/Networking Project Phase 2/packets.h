@@ -25,30 +25,29 @@ public:
 	inline packet()										{;}
 	inline ~packet()									{;}
     virtual string toString()							{ return "Packet"; }
-	inline int returnSize(double sTime)					{ return (int)round((sTime * speedOfMedium) / 8); }
-	inline int returnSize()								{ return size; }
-	inline double returnTime()							{ return 1000 * ((8.0 * size) / speedOfMedium); }
-	inline bool getAckValue()							{ return ack; }
-	inline int returnNumber()							{ return packetNumber; }
-	inline host* returnDest()							{ return destination; }
-	inline host* returnSend()							{ return sender; }
-	inline double returnTimeOC()						{ return timeOC; }
+	inline int returnSize(double sTime)					{ return (int)round((sTime * speedOfMedium) / 8); }				//Returns size of packet and sets it
+	inline int returnSize()								{ return size; }												//Returns size of current packet
+	inline double returnTime()							{ return 1000 * ((8.0 * size) / speedOfMedium); }				//Returns time to process packet
+	inline bool getAckValue()							{ return ack; }													//Tells if packet is ACK or not
+	inline int returnNumber()							{ return packetNumber; }										//Unique number given to packet to differentiate from others from same host
+	inline host* returnDest()							{ return destination; }											//Tells destination of packet
+	inline host* returnSend()							{ return sender; }												//Gives access to name of host sending packets
+	inline double returnTimeOC()						{ return timeOC; }												//Returns the time that the packet was created
 
 private:
 
 protected:
-	int size;					//Packet size
-	double serviceTime;			//Time to process
-	bool ack;					//Determines if packet is an ACK or not (can be ambiguous based on size if random-generated size is 64)
-	int packetNumber;			//Identifier for packet
-	host* destination;			//Is destination for packet
-	host* sender;				//Points to sender of packet (us)
+	int size;											//Packet size
+	double serviceTime;									//Time to process
+	bool ack;											//Determines if packet is an ACK or not (can be ambiguous based on size if random-generated size is 64)
+	int packetNumber;									//Identifier for packet
+	host* destination;									//Is destination for packet
+	host* sender;										//Points to sender of packet (us)
 	double timeOC;
 
 };
 
-//Class of sentData packet
-class sentData : public packet 
+class sentData : public packet																							//Class of sentData packet 
 {
 public:
     sentData(int pNum, host* destination, host* send);
@@ -62,8 +61,7 @@ protected:
 
 };
 
-//Class of ACK packet
-class ACK : public packet
+class ACK : public packet																								//Class of ACK packet
 {
 public:
 	ACK(int pNum, host* destination, host* send);
