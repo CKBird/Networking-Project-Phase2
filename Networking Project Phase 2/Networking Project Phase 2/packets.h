@@ -32,6 +32,7 @@ public:
 	inline int returnNumber()							{ return packetNumber; }
 	inline host* returnDest()							{ return destination; }
 	inline host* returnSend()							{ return sender; }
+	inline double returnTimeOC()						{ return timeOC; }
 
 private:
 
@@ -42,6 +43,7 @@ protected:
 	int packetNumber;			//Identifier for packet
 	host* destination;			//Is destination for packet
 	host* sender;				//Points to sender of packet (us)
+	double timeOC;
 
 };
 

@@ -35,6 +35,7 @@ sentData::sentData(int pNum, host* dest, host* send)
 	packetNumber = pNum;
 	destination = dest;
 	sender = send;
+	timeOC = simClock;
 };
 
 sentData::~sentData()
