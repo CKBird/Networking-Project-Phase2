@@ -18,15 +18,19 @@
 #define maxTime 1.12
 
 using namespace std;
-double speedOfMedium = (11 * (10 ^ 6));
+double speedOfMedium = (11 * (1000000));
 double ACKTime = ((8.0 * sizeOfACK) / speedOfMedium);
 float lambda;
 static int timeToNext;
 extern double simClock;
+extern double mu;
 
 sentData::sentData(int pNum, host* dest, host* send)
 {
 	size = returnSize(serviceTime = generatePacketServiceTime()); //Creates time and size of packet
+	if (size > 1544)
+		size = 1544;
+	//cout << "Size: " << size << endl;
 	ack = false;
 	packetNumber = pNum;
 	destination = dest;
@@ -43,11 +47,12 @@ double sentData::generatePacketServiceTime()
 {  
     double u; //w
     u = (rand() / (RAND_MAX + 1.0));
-    double temp = ((-1 / lambda) * log(1 - u)); //Make sure that we convert from double to int before returning
+    double temp = ((-1 / mu) * log(1 - u)); //Make sure that we convert from double to int before returning
 	
-	if (temp > maxTime)
-		temp = maxTime;
-	
+	//if (temp > maxTime)
+		//temp = maxTime;
+
+	//cout << "packet Service: " << temp << endl;
 	return temp;
 };
 

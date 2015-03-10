@@ -26,7 +26,8 @@ public:
 	inline ~packet()									{;}
     virtual string toString()							{ return "Packet"; }
 	inline int returnSize(double sTime)					{ return (int)round((sTime * speedOfMedium) / 8); }
-	inline double returnTime()							{ return ((8.0 * size) / speedOfMedium); }
+	inline int returnSize()								{ return size; }
+	inline double returnTime()							{ return 1000 * ((8.0 * size) / speedOfMedium); }
 	inline bool getAckValue()							{ return ack; }
 	inline int returnNumber()							{ return packetNumber; }
 	inline host* returnDest()							{ return destination; }
