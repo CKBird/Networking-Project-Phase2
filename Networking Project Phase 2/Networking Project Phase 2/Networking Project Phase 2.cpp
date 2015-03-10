@@ -6,6 +6,7 @@
 #include "time.h"
 #include "stdio.h"
 #include <iostream>
+#include <fstream>
 
 #define totalTime 100000																					//100 seconds, time in msec
 #define timeStep .01
@@ -25,9 +26,12 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
+	ofstream FILE;
+	FILE.open("output.csv");
+
 	for (int j = 0; j < 14; j++)
 	{
-		lambda = lamdArr[j % 7];
+		lambda = lamdArr[j % 7] * 1000;
 		numNetworks = numNArr[j / 7];
 		cout << "Test " << j << " - Lambda: " << lambda << " - Number of Networks: " << numNetworks << endl;
 
@@ -119,18 +123,19 @@ int main(int argc, char* argv[])
 		//cout << "Bytes Sent: " << bytesSent << " - Bytes" << endl;
 		cout << "Throughput: " << through << " - Bytes per hundreth of a msec" << endl;
 		//cout << "Total Delay: " << totalDelay << " - msec" << endl;
-		
+		double avgDelay;
 		if (through != 0)
 		{
-			double avgDelay = totalDelay / (through * 100);
+			avgDelay = totalDelay / bytesSent; //(through * 100);
 			cout << "Average Network Delay: " << avgDelay << " - msec" << endl;
 		}
 		else
 			cout << "Average Network Delay cannot be determined as throughput is 0" << endl;
 		cout << endl << endl;
+		FILE << lambda << "," << numNetworks << "," << through << "," << avgDelay << endl;
 	}
 	cout << "Simulations complete" << endl;
-	
+	FILE.close();
 	char input;
 	cin >> input;
 	
