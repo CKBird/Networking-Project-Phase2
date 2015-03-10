@@ -8,25 +8,25 @@
 #include <iostream>
 #include <fstream>
 
-#define totalTime 100000																					//100 seconds, time in msec
-#define timeStep .01
-#define SIFS .05
-#define DIFS .1
-#define maxSpeed 13.75
+#define totalTime 100000																					//100 seconds, time in milliseconds 
+#define timeStep .01																						//Each clock cycle is one hundreth of a millisecond, 1/5th of SIFS
+#define SIFS .05																							//Time between packet receive and ACK sent
+#define DIFS .1																								//Time after channel is marked idle that new packets cannot be sent
+#define maxSpeed 13.75																						//If 100% traffic, no lost packets, this is max speed
 
 double lambda = 0.9;
-double mu = 2685;																						//Mu value such that average packet size is 512		
-int numNetworks = 20;																					//N value from prompt
+double mu = 2685;																							//Mu value such that average packet size is 512		
+int numNetworks = 20;																						//N value from prompt
 double simClock;
 
-double lamdArr[7] = { .01, .05, .1, .3, .6, .8, .9 };
+double lamdArr[7] = { .01, .05, .1, .3, .6, .8, .9 };														//Lambda and #Networks values for simulations
 int numNArr[2] = { 10, 20 };
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
-	ofstream FILE;
+	ofstream FILE;																							//Creating and filling a file with the simulation results for easy graphing
 	FILE.open("output.csv");
 
 	for (int j = 0; j < 14; j++)
@@ -35,10 +35,10 @@ int main(int argc, char* argv[])
 		numNetworks = numNArr[j / 7];
 		cout << "Test " << j << " - Lambda: " << lambda << " - Number of Networks: " << numNetworks << endl;
 
-		while (!network.empty())
+		while (!network.empty())																			//Clearing list of networks between simulations
 			network.pop_front();
 
-		srand((unsigned int)time(NULL));
+		srand((unsigned int)time(NULL));																	//New Seed for Rand
 		for (int i = 0; i < numNetworks; i++)
 		{
 			network.push_back(host(i));																		//Once done, network.begin = host-0 etc
@@ -54,18 +54,18 @@ int main(int argc, char* argv[])
 
 		for (simClock = 0; simClock < totalTime; simClock += timeStep)										//Time is in msec, but increment by hundreths of a msec 
 		{
-			if (isSending && (busyTill <= simClock))
+			if (isSending && (busyTill <= simClock))														//If still marked as sending, but done sending, unmark
 			{
 				//cout << "Current simClock: " << simClock << endl;
 				//cout << "Done Sending" << endl;
 				isSending = false;
 			}
-			if ((busyTill <= simClock) && DIFSCounter)
+			if ((busyTill <= simClock) && DIFSCounter)														//If not sending, and DIFS counter > 0, count down
 			{
 				DIFSCounter--;
 			}
 
-			if (SIFSCounter && (busyTill <= simClock))
+			if (SIFSCounter && (busyTill <= simClock))														//If SIFS counter is > 0 and not busy, send ACK
 			{
 				if (!ACKSent && !(--SIFSCounter))
 				{
@@ -80,7 +80,7 @@ int main(int argc, char* argv[])
 				}
 			}
 
-			if (!SIFSCounter && !DIFSCounter && (busyTill <= simClock))
+			if (!SIFSCounter && !DIFSCounter && (busyTill <= simClock))										//If done sending and both DIFS and SIFS are done, can check for next packet
 			{
 				list<host*> sending;
 				for (list<host>::iterator it = network.begin(); it != network.end(); ++it)					//Iterate through list of hosts everytime
@@ -88,15 +88,13 @@ int main(int argc, char* argv[])
 					(*it).decSIFSTime();
 					(*it).runNormalOp(simClock);
 
-					if (!(*it).returnBackOff() && (*it).wantsToSend())
+					if (!(*it).returnBackOff() && (*it).wantsToSend())										//If a packet is to be sent from given host THIS MOMENT, add to sending list
 						sending.push_back(&*it);
 					else
 						(*it).decBackOff();
 				}
 
-				//cout << "Sending Size: " << sending.size() << endl;
-
-				if (sending.size() == 1)
+				if (sending.size() == 1)																	//If only ONE person wants to send, send their packet
 				{
 					isSending = true;
 					sending.front()->resetBOCounter();														//Reset BO Counter to 0
@@ -105,12 +103,11 @@ int main(int argc, char* argv[])
 					sent.returnDest()->receivedPacket(sent);												//Sending packet to host
 					bytesSent += sent.returnSize();
 					totalDelay += (simClock - sent.returnTimeOC() + sent.returnTime());
-					//cout << "Current simClock: " << simClock << endl;
 					//cout << "Sending From: " << (*(sent.returnSend())).returnHostNumber() << " Sending To: " << (*(sent.returnDest())).returnHostNumber() << " Packet Number: " << sent.returnNumber() << "Packet Time: " << sent.returnTime() << endl;
 					busyTill = sent.returnTime() + simClock;												//Set next busyTill to end of next packet transmission
 					ACKSent = false;
 				}
-				else if (sending.size() > 1)
+				else if (sending.size() > 1)																//If more than one person wants to send, tell them all to backoff
 				{
 					for (list<host*>::iterator it = sending.begin(); it != sending.end(); ++it)
 						(*it)->setBackOff();
@@ -118,7 +115,7 @@ int main(int argc, char* argv[])
 			}
 		}
 
-		double through = ((double)bytesSent / totalTime) * timeStep;
+		double through = ((double)bytesSent / totalTime) * timeStep;										//This block displays proper information based on simulations
 		//cout << "Always Busy Speed: " << maxSpeed << " - Bytes per hundreths of a msec" << endl;
 		//cout << "Bytes Sent: " << bytesSent << " - Bytes" << endl;
 		cout << "Throughput: " << through << " - Bytes per hundreth of a msec" << endl;
@@ -132,14 +129,13 @@ int main(int argc, char* argv[])
 		else
 			cout << "Average Network Delay cannot be determined as throughput is 0" << endl;
 		cout << endl << endl;
-		FILE << lambda << "," << numNetworks << "," << through << "," << avgDelay << endl;
+		FILE << lambda << "," << numNetworks << "," << through << "," << avgDelay << endl;					//Write to and close file written
 	}
 	cout << "Simulations complete" << endl;
 	FILE.close();
-	char input;
+	char input;																								//Wait for user input to keep item open
 	cin >> input;
 	
-	//Have ending bracket for values here
 	return 0;
 }
 
