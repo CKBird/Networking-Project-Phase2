@@ -20,7 +20,6 @@ host::host(int hNum)
 	packetNumber = 0;
 	hostNumber = hNum;
 	TTNSend = generateTimeToNext();
-	//cout << "TTNSend: " << TTNSend << endl;
 	backOffCounter = 0;
 	failedBOCounter = 0;
 };
@@ -34,8 +33,7 @@ double host::generateTimeToNext()
 {
 	double u; //w
 	u = (rand() / (RAND_MAX + 1.0));
-	double temp = (((-1 / lambda) * log(1 - u)) * 1000);										//Make sure that we convert from double to int before returning
-	//cout << "GTTN: " << temp << endl;
+	double temp = (((-1 / lambda) * log(1 - u)) * 1000);								//Make sure that we convert from double to int before returning
 	return temp;
 };
 
@@ -78,10 +76,6 @@ packet host::popOutgoing()
 {
 	packet temp = outgoingBuffer.front();
 	outgoingBuffer.pop();
-
-	//if (!(temp.getAckValue()))
-		//unACK.push_back(temp);
-
 	return temp;
 }
 
@@ -110,9 +104,7 @@ void host::runNormalOp(double sClock)
 {
 	if (TTNSend <= sClock)
 	{
-		//cout << "Packet into buffer..." << endl;
 		outgoingBuffer.push(sentData(packetNumber++, returnRandHost(), this));			//Puts new packet into outgoingBuffer after TTN has arrived
 		TTNSend = sClock + generateTimeToNext();										//Creates next timestamp when a new packet will be sent
-		//cout << "TTNSend: " << TTNSend << endl;
 	}
 }
