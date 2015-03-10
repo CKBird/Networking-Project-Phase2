@@ -1,4 +1,7 @@
-//Header for Host.cpp
+//host.h
+//Chris Bird and Blake Tacklind
+//ECS 152A/EEC 173 Computer Networks
+//Class Host defines, and allows for processes that involve specific packets, and the sending queue
 #ifndef HOST_H
 #define HOST_H
 

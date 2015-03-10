@@ -1,3 +1,7 @@
+//host.cpp
+//Chris Bird and Blake Tacklind
+//ECS 152A/EEC 173 Computer Networks
+
 #include "stdafx.h"
 #include "host.h"
 #include "packets.h"

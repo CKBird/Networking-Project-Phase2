@@ -1,10 +1,8 @@
-/*
- * Networking Project
- * Phase 1 - Server Emulation
- * Chris Bird, Blake Tacklind
- * 
- * Declaration of event class and sub-class
- */
+//packets.h
+//Chris Bird and Blake Tacklind
+//ECS 152A/EEC 173 Computer Networks
+//Defines and sets up the packet class, which has two child classes, ACK and sentData
+//sentData is a data packet, where as ACK is purely an acknowledgment of 64 bytes in size
 
 #ifndef PACKETS_H
 #define PACKETS_H

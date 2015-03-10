@@ -1,4 +1,7 @@
-// Networking Project Phase 2.cpp : Defines the entry point for the console application.
+//Networking Project Phase 2.cpp
+//Chris Bird and Blake Tacklind
+//ECS 152A/EEC 173 Computer Networks
+//Main code that controls the creation, running, and cleaning of hosts.
 
 #include "stdafx.h"
 #include "packets.h"
@@ -31,7 +34,7 @@ int main(int argc, char* argv[])
 
 	for (int j = 0; j < 14; j++)
 	{
-		lambda = lamdArr[j % 7] * 1000;
+		lambda = lamdArr[j % 7];
 		numNetworks = numNArr[j / 7];
 		cout << "Test " << j << " - Lambda: " << lambda << " - Number of Networks: " << numNetworks << endl;
 

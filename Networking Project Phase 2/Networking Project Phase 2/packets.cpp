@@ -1,10 +1,6 @@
-/*
- * Networking Project
- * Phase 1 - Server Emulation
- * Chris Bird, Blake Tacklind
- * 
- * Definition of event class and sub-class
- */
+//packets.cpp
+//Chris Bird and Blake Tacklind
+//ECS 152A/EEC 173 Computer Networks
 
 #include "stdafx.h"
 #include "stdio.h"
